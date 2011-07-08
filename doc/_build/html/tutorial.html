@@ -1,0 +1,180 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Tutorial &mdash; pycloud v1.0 documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '#',
+        VERSION:     '1.0',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="author" title="About these documents" href="about.html" />
+    <link rel="top" title="pycloud v1.0 documentation" href="index.html" />
+    <link rel="next" title="Code" href="code.html" />
+    <link rel="prev" title="Pre-requisites" href="prereq.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="modindex.html" title="Global Module Index"
+             accesskey="M">modules</a> |</li>
+        <li class="right" >
+          <a href="code.html" title="Code"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="prereq.html" title="Pre-requisites"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">pycloud v1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="tutorial">
+<h1>Tutorial<a class="headerlink" href="#tutorial" title="Permalink to this headline">¶</a></h1>
+<p>The desktop and client use the same python script &#8216;pycloudC.py&#8217; called with different arguments. The android phone has a different script called &#8216;pycloudAndroid.py&#8217;</p>
+<div class="section" id="code-options">
+<h2>Code options:<a class="headerlink" href="#code-options" title="Permalink to this headline">¶</a></h2>
+<p>The different command line options for the script configure it to runn in different modes and with specific parameters.</p>
+<div class="line-block">
+<div class="line"><tt class="docutils literal"><span class="pre">--mode</span> <span class="pre">&lt;server</span> <span class="pre">or</span> <span class="pre">client&gt;</span></tt></div>
+<div class="line">This specifies the mode of the script</div>
+<div class="line">Options are server or client</div>
+</div>
+<div class="line-block">
+<div class="line"><tt class="docutils literal"><span class="pre">--ip</span> <span class="pre">&lt;IP_address&gt;</span></tt></div>
+<div class="line">This specifies IP address to connect to (client only)</div>
+<div class="line">It should be a valid reachable IP</div>
+<div class="line">Ex: &#8211;ip 10.0.1.9</div>
+</div>
+<div class="line-block">
+<div class="line"><tt class="docutils literal"><span class="pre">--port</span> <span class="pre">&lt;portnumber&gt;</span></tt></div>
+<div class="line">This specifies the port to listen on (server) or to connect to (client)</div>
+<div class="line">Valid range is any unused TCP port between 1-65535 (Pref. higher than 1024)</div>
+<div class="line">Ex: &#8211;port 4566</div>
+</div>
+<div class="line-block">
+<div class="line"><tt class="docutils literal"><span class="pre">--path</span> <span class="pre">&lt;watch_path&gt;</span></tt></div>
+<div class="line">This specifies the watch path for the client or server</div>
+<div class="line">It should be a valid, FULL path (with permissions) on the device.</div>
+<div class="line">Make sure to have a trailing &#8216;/&#8217; in the path.</div>
+<div class="line">Ex: /home/ftp</div>
+</div>
+<div class="line-block">
+<div class="line"><tt class="docutils literal"><span class="pre">-h</span></tt></div>
+<div class="line">This displays usage help</div>
+</div>
+</div>
+<div class="section" id="running-the-applications">
+<h2>Running the applications<a class="headerlink" href="#running-the-applications" title="Permalink to this headline">¶</a></h2>
+<div class="line-block">
+<div class="line">Note: Always run the server first followed by the client/clients.</div>
+<div class="line">Note: You need to have root access while runnng the server.</div>
+<div class="line">Note: Make sure that the ports that you use are not blocked by the network.</div>
+</div>
+<div class="line-block">
+<div class="line">To run the server:</div>
+</div>
+<div class="line-block">
+<div class="line"><tt class="docutils literal"><span class="pre">bash#</span> <span class="pre">./pycloudC.py</span> <span class="pre">--mode</span> <span class="pre">server</span> <span class="pre">--port</span> <span class="pre">5050</span> <span class="pre">--path</span> <span class="pre">/home/ftp/</span></tt></div>
+</div>
+<div class="line-block">
+<div class="line">To run each client:</div>
+</div>
+<div class="line-block">
+<div class="line"><tt class="docutils literal"><span class="pre">bash#</span> <span class="pre">./pycloudC.py</span> <span class="pre">--mode</span> <span class="pre">client</span> <span class="pre">--ip</span> <span class="pre">10.0.1.9</span> <span class="pre">--port</span> <span class="pre">5050</span> <span class="pre">--path</span> <span class="pre">/home/Desktop/watchDir1/</span></tt></div>
+</div>
+</div>
+<div class="section" id="operation">
+<h2>Operation<a class="headerlink" href="#operation" title="Permalink to this headline">¶</a></h2>
+<p>Create or delete any files in the watched directories. The changes should reflect in all the clients.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3><a href="index.html">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference external" href="#">Tutorial</a><ul>
+<li><a class="reference external" href="#code-options">Code options:</a></li>
+<li><a class="reference external" href="#running-the-applications">Running the applications</a></li>
+<li><a class="reference external" href="#operation">Operation</a></li>
+</ul>
+</li>
+</ul>
+
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="prereq.html"
+                                  title="previous chapter">Pre-requisites</a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="code.html"
+                                  title="next chapter">Code</a></p>
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="_sources/tutorial.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="modindex.html" title="Global Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="code.html" title="Code"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="prereq.html" title="Pre-requisites"
+             >previous</a> |</li>
+        <li><a href="index.html">pycloud v1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2011, Vishal Verma.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.4.
+    </div>
+  </body>
+</html>

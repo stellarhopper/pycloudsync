@@ -1,0 +1,194 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Pre-requisites &mdash; pycloud v1.0 documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '#',
+        VERSION:     '1.0',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="author" title="About these documents" href="about.html" />
+    <link rel="top" title="pycloud v1.0 documentation" href="index.html" />
+    <link rel="next" title="Tutorial" href="tutorial.html" />
+    <link rel="prev" title="Project Goals" href="goals.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="modindex.html" title="Global Module Index"
+             accesskey="M">modules</a> |</li>
+        <li class="right" >
+          <a href="tutorial.html" title="Tutorial"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="goals.html" title="Project Goals"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">pycloud v1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="pre-requisites">
+<h1>Pre-requisites<a class="headerlink" href="#pre-requisites" title="Permalink to this headline">¶</a></h1>
+<p>The following procedure is for installation on Ubuntu.</p>
+<p>There are some packets required for the system to work.
+You will need:</p>
+<blockquote>
+<ul class="simple">
+<li>Python 2.6 or higher</li>
+<li>ftplib</li>
+<li>build-essential</li>
+<li>pyinotify</li>
+</ul>
+</blockquote>
+<div class="section" id="setup-procedure">
+<h2>Setup Procedure<a class="headerlink" href="#setup-procedure" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="install-python">
+<h3>Install Python<a class="headerlink" href="#install-python" title="Permalink to this headline">¶</a></h3>
+<dl class="docutils">
+<dt>This will install python</dt>
+<dd><div class="first last line-block">
+<div class="line"><tt class="docutils literal"><span class="pre">bash#</span> <span class="pre">apt-get</span> <span class="pre">install</span> <span class="pre">python</span></tt></div>
+</div>
+</dd>
+</dl>
+</div>
+<div class="section" id="install-ftplib-and-pyinotify">
+<h3>Install ftplib and pyinotify<a class="headerlink" href="#install-ftplib-and-pyinotify" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div class="line-block">
+<div class="line"><tt class="docutils literal"><span class="pre">bash#</span> <span class="pre">easy_install</span> <span class="pre">ftplib</span></tt></div>
+<div class="line"><tt class="docutils literal"><span class="pre">bash#</span> <span class="pre">easy_install</span> <span class="pre">pyinotify</span></tt></div>
+</div>
+</blockquote>
+</div>
+<div class="section" id="install-pureftpd-and-configure-on-server-side">
+<h3>Install pureftpd and configure on server side<a class="headerlink" href="#install-pureftpd-and-configure-on-server-side" title="Permalink to this headline">¶</a></h3>
+<blockquote>
+<div class="line-block">
+<div class="line"><tt class="docutils literal"><span class="pre">bash#</span> <span class="pre">sudo</span> <span class="pre">apt-get</span> <span class="pre">install</span> <span class="pre">pureftpd</span></tt></div>
+</div>
+</blockquote>
+<div class="line-block">
+<div class="line">Configure pureftpd as per available documentation and set ftp root path to /home/ftp</div>
+<div class="line">Since this path will belong to user &#8216;ftpuser&#8217;, all accesses to this will have to be as root</div>
+</div>
+</div>
+<div class="section" id="preparing-the-android-phone">
+<h3>Preparing the Android phone<a class="headerlink" href="#preparing-the-android-phone" title="Permalink to this headline">¶</a></h3>
+<div class="line-block">
+<div class="line">Google for &#8216;SL4A&#8217; and install the app using the QR code on the googlecode page</div>
+<div class="line">From SL4A get the python interpreter; it will download Py4A.</div>
+<div class="line">Put the ftplib.py source in the working directory, along with pyclourAndroid.py</div>
+<div class="line">Install an SSH daemon app (I used quickSSHd) to gain access to a linux shell on the phone.</div>
+<div class="line">On this Linux shell, set some environment variables:</div>
+</div>
+<blockquote>
+<div class="line-block">
+<div class="line"><tt class="docutils literal"><span class="pre">PYTHONPATH=/data/data/com.googlecode.pythonforandroid/files/python/lib/python2.6/lib-dynload</span></tt></div>
+<div class="line"><tt class="docutils literal"><span class="pre">PYTHONPATH=${PYTHONPATH}:/mnt/sdcard/com.googlecode.pythonforandroid/extras/python</span></tt></div>
+<div class="line"><tt class="docutils literal"><span class="pre">export</span> <span class="pre">PYTHONPATH</span></tt></div>
+<div class="line"><tt class="docutils literal"><span class="pre">export</span> <span class="pre">PYTHONHOME=/data/data/com.googlecode.pythonforandroid/files/python</span></tt></div>
+<div class="line"><tt class="docutils literal"><span class="pre">export</span> <span class="pre">LD_LIBRARY_PATH=/data/data/com.googlecode.pythonforandroid/files/python/lib</span></tt></div>
+</div>
+</blockquote>
+<div class="line-block">
+<div class="line">Test the setup by typing &#8216;python&#8217; anywhere from the shell and the interpreter should start.</div>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3><a href="index.html">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference external" href="#">Pre-requisites</a><ul>
+<li><a class="reference external" href="#setup-procedure">Setup Procedure</a><ul>
+<li><a class="reference external" href="#install-python">Install Python</a></li>
+<li><a class="reference external" href="#install-ftplib-and-pyinotify">Install ftplib and pyinotify</a></li>
+<li><a class="reference external" href="#install-pureftpd-and-configure-on-server-side">Install pureftpd and configure on server side</a></li>
+<li><a class="reference external" href="#preparing-the-android-phone">Preparing the Android phone</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="goals.html"
+                                  title="previous chapter">Project Goals</a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="tutorial.html"
+                                  title="next chapter">Tutorial</a></p>
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="_sources/prereq.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="modindex.html" title="Global Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="tutorial.html" title="Tutorial"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="goals.html" title="Project Goals"
+             >previous</a> |</li>
+        <li><a href="index.html">pycloud v1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2011, Vishal Verma.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.4.
+    </div>
+  </body>
+</html>
