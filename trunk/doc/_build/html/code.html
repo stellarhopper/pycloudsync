@@ -1,0 +1,337 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Code &mdash; pycloud v1.0 documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '#',
+        VERSION:     '1.0',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="author" title="About these documents" href="about.html" />
+    <link rel="top" title="pycloud v1.0 documentation" href="index.html" />
+    <link rel="next" title="Links" href="links.html" />
+    <link rel="prev" title="Tutorial" href="tutorial.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="modindex.html" title="Global Module Index"
+             accesskey="M">modules</a> |</li>
+        <li class="right" >
+          <a href="links.html" title="Links"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="tutorial.html" title="Tutorial"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">pycloud v1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="code">
+<h1>Code<a class="headerlink" href="#code" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="code-description">
+<h2>Code Description<a class="headerlink" href="#code-description" title="Permalink to this headline">¶</a></h2>
+<p>The server client code is uses a simple socket connection for command exchange and an FTP client and server for data transfer.
+Here is a description of the code</p>
+<div class="section" id="linux-server-client">
+<h3>Linux Server/Client<a class="headerlink" href="#linux-server-client" title="Permalink to this headline">¶</a></h3>
+<div class="line-block">
+<div class="line"><strong>Server Mode:</strong></div>
+<div class="line-block">
+<div class="line">1. The server listens on a TCP socket to await clients</div>
+<div class="line">2. It starts pyinotify watches on the specified directory</div>
+<div class="line">3. The pyinotify callbacks enqueue directory changes which are broadcast to all clients</div>
+<div class="line">4. The queue is emptied by the server function in a loop and the messages are sent across the TCP connection.</div>
+<div class="line">5. The command sends all the info needed to retrieve the changed files via FTP or to delete files.</div>
+</div>
+</div>
+<div class="line-block">
+<div class="line"><strong>Client Mode:</strong></div>
+<div class="line-block">
+<div class="line">1. The clients connect to the specified server</div>
+<div class="line">2. It starts pyinotify watches on the specified directory</div>
+<div class="line">3. The pyinotify callbacks enqueue changes</div>
+<div class="line">4. A thread dequeues the changes and performs the appropriate FTP commands.</div>
+<div class="line">5. The client function also listens to messages from the server to either enqueue a retrieve command or to delete a local file.</div>
+</div>
+</div>
+</div>
+<div class="section" id="android-client">
+<h3>Android Client<a class="headerlink" href="#android-client" title="Permalink to this headline">¶</a></h3>
+<p>The Android Client differs in the following way:
+|   1. The pyinotify module is not available on Android
+|   2. My monitorFS function gets a directory listing every second and compares it to the previous listing.
+|   3. It then Lists the additions and deletions and enqueues appropriate commands
+|   4. These commands are then dequeued by the same thread as above.</p>
+</div>
+</div>
+<div class="section" id="code-autodocumentation">
+<h2>Code AutoDocumentation<a class="headerlink" href="#code-autodocumentation" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-pycloudC">
+<h3>Linux Client/Server<a class="headerlink" href="#module-pycloudC" title="Permalink to this headline">¶</a></h3>
+<p>The description of the various modules in the code are as follows:</p>
+<p>Author: Vishal Verma</p>
+<dl class="class">
+<dt id="pycloudC.EventHandler">
+<em class="property">class </em><tt class="descclassname">pycloudC.</tt><tt class="descname">EventHandler</tt><big>(</big><em>pevent=None</em>, <em>**kargs</em><big>)</big><a class="headerlink" href="#pycloudC.EventHandler" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is a sub-class to create overriding callback functions for 
+queueing inotify events. Each callback function enqueues 
+to a global queue</p>
+<dl class="method">
+<dt id="pycloudC.EventHandler.process_IN_CLOSE_WRITE">
+<tt class="descname">process_IN_CLOSE_WRITE</tt><big>(</big><em>event</em><big>)</big><a class="headerlink" href="#pycloudC.EventHandler.process_IN_CLOSE_WRITE" title="Permalink to this definition">¶</a></dt>
+<dd>This callback is used by pyinotify to notify for a file close  
+after modification event in the watched directory</dd></dl>
+
+<dl class="method">
+<dt id="pycloudC.EventHandler.process_IN_CREATE">
+<tt class="descname">process_IN_CREATE</tt><big>(</big><em>event</em><big>)</big><a class="headerlink" href="#pycloudC.EventHandler.process_IN_CREATE" title="Permalink to this definition">¶</a></dt>
+<dd>This callback is used by pyinotify to notify for a file create 
+event in the watched directory</dd></dl>
+
+<dl class="method">
+<dt id="pycloudC.EventHandler.process_IN_DELETE">
+<tt class="descname">process_IN_DELETE</tt><big>(</big><em>event</em><big>)</big><a class="headerlink" href="#pycloudC.EventHandler.process_IN_DELETE" title="Permalink to this definition">¶</a></dt>
+<dd>This callback is used by pyinotify to notify for a file delete 
+event in the watched directory</dd></dl>
+
+<dl class="method">
+<dt id="pycloudC.EventHandler.process_IN_DELETE_SELF">
+<tt class="descname">process_IN_DELETE_SELF</tt><big>(</big><em>event</em><big>)</big><a class="headerlink" href="#pycloudC.EventHandler.process_IN_DELETE_SELF" title="Permalink to this definition">¶</a></dt>
+<dd>This callback is used by pyinotify to notify for a file delete 
+event in the watched directory</dd></dl>
+
+<dl class="method">
+<dt id="pycloudC.EventHandler.process_IN_MODIFY">
+<tt class="descname">process_IN_MODIFY</tt><big>(</big><em>event</em><big>)</big><a class="headerlink" href="#pycloudC.EventHandler.process_IN_MODIFY" title="Permalink to this definition">¶</a></dt>
+<dd>This callback is used by pyinotify to notify for a file modify 
+event in the watched directory</dd></dl>
+
+<dl class="method">
+<dt id="pycloudC.EventHandler.process_IN_MOVED_FROM">
+<tt class="descname">process_IN_MOVED_FROM</tt><big>(</big><em>event</em><big>)</big><a class="headerlink" href="#pycloudC.EventHandler.process_IN_MOVED_FROM" title="Permalink to this definition">¶</a></dt>
+<dd>This callback is used by pyinotify to notify for a file move 
+event in the watched directory</dd></dl>
+
+<dl class="method">
+<dt id="pycloudC.EventHandler.process_IN_MOVED_TO">
+<tt class="descname">process_IN_MOVED_TO</tt><big>(</big><em>event</em><big>)</big><a class="headerlink" href="#pycloudC.EventHandler.process_IN_MOVED_TO" title="Permalink to this definition">¶</a></dt>
+<dd>This callback is used by pyinotify to notify for a file move 
+event in the watched directory</dd></dl>
+
+<dl class="method">
+<dt id="pycloudC.EventHandler.process_IN_MOVE_SELF">
+<tt class="descname">process_IN_MOVE_SELF</tt><big>(</big><em>event</em><big>)</big><a class="headerlink" href="#pycloudC.EventHandler.process_IN_MOVE_SELF" title="Permalink to this definition">¶</a></dt>
+<dd>This callback is used by pyinotify to notify for a file move 
+event in the watched directory</dd></dl>
+
+<dl class="method">
+<dt id="pycloudC.EventHandler.process_default">
+<tt class="descname">process_default</tt><big>(</big><em>event</em><big>)</big><a class="headerlink" href="#pycloudC.EventHandler.process_default" title="Permalink to this definition">¶</a></dt>
+<dd>This callback is used by pyinotify to notify for a default 
+event in the watched directory</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="pycloudC.cloudConnect">
+<tt class="descclassname">pycloudC.</tt><tt class="descname">cloudConnect</tt><big>(</big><em>port</em>, <em>ftpIp</em><big>)</big><a class="headerlink" href="#pycloudC.cloudConnect" title="Permalink to this definition">¶</a></dt>
+<dd>Function to create and handle the TCP client side connection using the
+sockets API. (parameters: port, IP address to connect to)</dd></dl>
+
+<dl class="function">
+<dt id="pycloudC.ftpGetFile">
+<tt class="descclassname">pycloudC.</tt><tt class="descname">ftpGetFile</tt><big>(</big><em>fName</em><big>)</big><a class="headerlink" href="#pycloudC.ftpGetFile" title="Permalink to this definition">¶</a></dt>
+<dd>Retrieve a file from the ftp server at the specified IP address 
+(parameters: file name)</dd></dl>
+
+<dl class="function">
+<dt id="pycloudC.getUsrOpts">
+<tt class="descclassname">pycloudC.</tt><tt class="descname">getUsrOpts</tt><big>(</big><big>)</big><a class="headerlink" href="#pycloudC.getUsrOpts" title="Permalink to this definition">¶</a></dt>
+<dd>Get command line arguments passed by the user</dd></dl>
+
+<dl class="function">
+<dt id="pycloudC.initWatches">
+<tt class="descclassname">pycloudC.</tt><tt class="descname">initWatches</tt><big>(</big><em>watchPath</em><big>)</big><a class="headerlink" href="#pycloudC.initWatches" title="Permalink to this definition">¶</a></dt>
+<dd>Initialize the pynotify watches for the watched directory. 
+(parameters: path to watched directory)</dd></dl>
+
+<dl class="function">
+<dt id="pycloudC.killWatches">
+<tt class="descclassname">pycloudC.</tt><tt class="descname">killWatches</tt><big>(</big><em>wm</em>, <em>wdd</em>, <em>notifier</em><big>)</big><a class="headerlink" href="#pycloudC.killWatches" title="Permalink to this definition">¶</a></dt>
+<dd>Stop the previously set watches</dd></dl>
+
+<dl class="function">
+<dt id="pycloudC.main">
+<tt class="descclassname">pycloudC.</tt><tt class="descname">main</tt><big>(</big><big>)</big><a class="headerlink" href="#pycloudC.main" title="Permalink to this definition">¶</a></dt>
+<dd>This is the main function for the cloud sync application. The command
+line arguments decide whether it will go into server or client mode</dd></dl>
+
+<dl class="function">
+<dt id="pycloudC.readQandFTP">
+<tt class="descclassname">pycloudC.</tt><tt class="descname">readQandFTP</tt><big>(</big><big>)</big><a class="headerlink" href="#pycloudC.readQandFTP" title="Permalink to this definition">¶</a></dt>
+<dd>Function (thread) to dequeue a command from the global actions queue 
+and perform the appropriate FTP command (store/retrieve/delete</dd></dl>
+
+<dl class="function">
+<dt id="pycloudC.serveCloud">
+<tt class="descclassname">pycloudC.</tt><tt class="descname">serveCloud</tt><big>(</big><em>port</em>, <em>notifier</em><big>)</big><a class="headerlink" href="#pycloudC.serveCloud" title="Permalink to this definition">¶</a></dt>
+<dd>Function to act as the TCP server (cloud) where clients would connect
+to. (parameters: port to serve on and &#8216;notifier&#8217; object from pyinotify</dd></dl>
+
+<dl class="function">
+<dt id="pycloudC.usage">
+<tt class="descclassname">pycloudC.</tt><tt class="descname">usage</tt><big>(</big><big>)</big><a class="headerlink" href="#pycloudC.usage" title="Permalink to this definition">¶</a></dt>
+<dd>This function shows the usage of the script if called with invalid or
+no options</dd></dl>
+
+</div>
+<div class="section" id="module-pycloudAndroid">
+<h3>Android Client<a class="headerlink" href="#module-pycloudAndroid" title="Permalink to this headline">¶</a></h3>
+<p>The description of the various modules in the code are as follows:</p>
+<p>Author: Vishal Verma</p>
+<dl class="function">
+<dt id="pycloudAndroid.cloudConnect">
+<tt class="descclassname">pycloudAndroid.</tt><tt class="descname">cloudConnect</tt><big>(</big><em>port</em>, <em>ftpIp</em><big>)</big><a class="headerlink" href="#pycloudAndroid.cloudConnect" title="Permalink to this definition">¶</a></dt>
+<dd>Function to create and handle the TCP client side connection using the
+sockets API. (parameters: port, IP address to connect to)</dd></dl>
+
+<dl class="function">
+<dt id="pycloudAndroid.fsMonitor">
+<tt class="descclassname">pycloudAndroid.</tt><tt class="descname">fsMonitor</tt><big>(</big><big>)</big><a class="headerlink" href="#pycloudAndroid.fsMonitor" title="Permalink to this definition">¶</a></dt>
+<dd>This function uses the &#8216;os&#8217; module to implement filesystem monitoring.
+It is started as a thread and checks for changes every one second and
+enqueues the changes into a global queue</dd></dl>
+
+<dl class="function">
+<dt id="pycloudAndroid.ftpGetFile">
+<tt class="descclassname">pycloudAndroid.</tt><tt class="descname">ftpGetFile</tt><big>(</big><em>fName</em><big>)</big><a class="headerlink" href="#pycloudAndroid.ftpGetFile" title="Permalink to this definition">¶</a></dt>
+<dd>Retrieve a file from the ftp server at the specified IP address 
+(parameters: file name)</dd></dl>
+
+<dl class="function">
+<dt id="pycloudAndroid.getUsrOpts">
+<tt class="descclassname">pycloudAndroid.</tt><tt class="descname">getUsrOpts</tt><big>(</big><big>)</big><a class="headerlink" href="#pycloudAndroid.getUsrOpts" title="Permalink to this definition">¶</a></dt>
+<dd>Get command line arguments passed by the user</dd></dl>
+
+<dl class="function">
+<dt id="pycloudAndroid.main">
+<tt class="descclassname">pycloudAndroid.</tt><tt class="descname">main</tt><big>(</big><big>)</big><a class="headerlink" href="#pycloudAndroid.main" title="Permalink to this definition">¶</a></dt>
+<dd>This is the main function containing Android specific code for the 
+cloud sync application. The command line arguments can be specified but 
+have a default set since I could not find an easy way to supply them 
+when calling the script from the phone.</dd></dl>
+
+<dl class="function">
+<dt id="pycloudAndroid.readQandFTP">
+<tt class="descclassname">pycloudAndroid.</tt><tt class="descname">readQandFTP</tt><big>(</big><big>)</big><a class="headerlink" href="#pycloudAndroid.readQandFTP" title="Permalink to this definition">¶</a></dt>
+<dd>Function (thread) to dequeue a command from the global actions queue 
+and perform the appropriate FTP command (store/retrieve/delete</dd></dl>
+
+<dl class="function">
+<dt id="pycloudAndroid.usage">
+<tt class="descclassname">pycloudAndroid.</tt><tt class="descname">usage</tt><big>(</big><big>)</big><a class="headerlink" href="#pycloudAndroid.usage" title="Permalink to this definition">¶</a></dt>
+<dd>This function shows the usage of the script if called with invalid or
+no options</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+            <h3><a href="index.html">Table Of Contents</a></h3>
+            <ul>
+<li><a class="reference external" href="#">Code</a><ul>
+<li><a class="reference external" href="#code-description">Code Description</a><ul>
+<li><a class="reference external" href="#linux-server-client">Linux Server/Client</a></li>
+<li><a class="reference external" href="#android-client">Android Client</a></li>
+</ul>
+</li>
+<li><a class="reference external" href="#code-autodocumentation">Code AutoDocumentation</a><ul>
+<li><a class="reference external" href="#module-pycloudC">Linux Client/Server</a></li>
+<li><a class="reference external" href="#module-pycloudAndroid">Android Client</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            <h4>Previous topic</h4>
+            <p class="topless"><a href="tutorial.html"
+                                  title="previous chapter">Tutorial</a></p>
+            <h4>Next topic</h4>
+            <p class="topless"><a href="links.html"
+                                  title="next chapter">Links</a></p>
+            <h3>This Page</h3>
+            <ul class="this-page-menu">
+              <li><a href="_sources/code.txt"
+                     rel="nofollow">Show Source</a></li>
+            </ul>
+          <div id="searchbox" style="display: none">
+            <h3>Quick search</h3>
+              <form class="search" action="search.html" method="get">
+                <input type="text" name="q" size="18" />
+                <input type="submit" value="Go" />
+                <input type="hidden" name="check_keywords" value="yes" />
+                <input type="hidden" name="area" value="default" />
+              </form>
+              <p class="searchtip" style="font-size: 90%">
+              Enter search terms or a module, class or function name.
+              </p>
+          </div>
+          <script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="modindex.html" title="Global Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="links.html" title="Links"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="tutorial.html" title="Tutorial"
+             >previous</a> |</li>
+        <li><a href="index.html">pycloud v1.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+      &copy; Copyright 2011, Vishal Verma.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 0.6.4.
+    </div>
+  </body>
+</html>
